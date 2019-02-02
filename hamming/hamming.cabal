@@ -1,0 +1,36 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: f0fce52a0dd1c0fe83ef05ff5551b0070ebc15555d43eb39385cde04337e4387
+
+name:           hamming
+version:        2.1.1.8
+build-type:     Simple
+
+library
+  exposed-modules:
+      Hamming
+  other-modules:
+      Paths_hamming
+  hs-source-dirs:
+      src
+  ghc-options: -Wall
+  build-depends:
+      base
+  default-language: Haskell2010
+
+test-suite test
+  type: exitcode-stdio-1.0
+  main-is: Tests.hs
+  other-modules:
+      Paths_hamming
+  hs-source-dirs:
+      test
+  build-depends:
+      base
+    , hamming
+    , hspec
+  default-language: Haskell2010
