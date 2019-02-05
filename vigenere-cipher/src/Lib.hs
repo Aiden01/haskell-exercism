@@ -4,7 +4,7 @@ module Lib
 
 import Data.Maybe (fromJust)
 import Data.List (elemIndex, intercalate)
-import Data.Char (toUpper, isLetter, isUpper)
+import Data.Char (toLower, isLetter, isUpper, ord)
 
 data Size = Upper | Lower
 
@@ -17,7 +17,7 @@ transform keyC plainC
         | not $ isLetter plainC = plainC
         | otherwise = do
             let charSize = if isUpper plainC then Upper else Lower
-            getNewChar charSize (letterPos plainC) (letterPos keyC)
+            getNewChar charSize (fromJust $ letterPos plainC) (fromJust $ letterPos keyC)
 
 
 setKeyLength :: Int -> String -> String
@@ -29,8 +29,11 @@ getNewChar size plainPos keyPos = alphabet size !! ((plainPos + keyPos) `mod` 26
 
 
 
-letterPos :: Char -> Int
-letterPos c = fromJust $ toUpper c `elemIndex` alphabet Upper
+
+letterPos :: Char -> Maybe Int
+letterPos c
+    | isLetter c = Just (ord (toLower c) - ord 'a')
+    | otherwise  = Nothing
 
 
 -- | Tests
@@ -45,9 +48,7 @@ letterPos c = fromJust $ toUpper c `elemIndex` alphabet Upper
 -- "omstv2"
 
 encrypt :: String -> String -> String
-encrypt plain key 
-    | length plain == length key = zipWith transform key plain
-    | otherwise = do
+encrypt plain key = do
         let fixedKey = setKeyLength (length plain) (filter isLetter key)
         zipWith transform fixedKey plain
 
