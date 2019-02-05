@@ -3,7 +3,7 @@ module Lib
     ) where
 
 import Data.Maybe (fromJust)
-import Data.List (elemIndex, intercalate)
+import Data.List (elemIndex)
 import Data.Char (toLower, isLetter, isUpper, ord)
 
 data Size = Upper | Lower
