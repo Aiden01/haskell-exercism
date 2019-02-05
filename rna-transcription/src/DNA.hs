@@ -13,6 +13,10 @@ transform 'T' = 'A'
 transform 'C' = 'G'
 transform 'G' = 'C'
 
+
+
+
+
 toRNA :: String -> Either Char String
 toRNA xs 
     | all isValid xs = Right $ map transform xs
