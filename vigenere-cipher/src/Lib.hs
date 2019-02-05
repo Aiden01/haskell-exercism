@@ -7,25 +7,27 @@ import Data.List (elemIndex)
 import Data.Char (toLower, isLetter, isUpper, ord)
 
 data Size = Upper | Lower
+data Action = Decrypt | Encrypt
 
 alphabet :: Size -> String
 alphabet Upper = ['A'..'Z']
 alphabet Lower = ['a'..'z']
 
-transform :: Char -> Char -> Char
-transform keyC plainC 
+transform :: Action -> Char -> Char -> Char
+transform action keyC plainC 
         | not $ isLetter plainC = plainC
         | otherwise = do
             let charSize = if isUpper plainC then Upper else Lower
-            getNewChar charSize (fromJust $ letterPos plainC) (fromJust $ letterPos keyC)
+            getNewChar action charSize (fromJust $ letterPos plainC) (fromJust $ letterPos keyC)
 
 
 setKeyLength :: Int -> String -> String
 setKeyLength n xs = take n (cycle xs)
 
 
-getNewChar :: Size -> Int -> Int -> Char
-getNewChar size plainPos keyPos = alphabet size !! ((plainPos + keyPos) `mod` 26)
+getNewChar :: Action -> Size -> Int -> Int -> Char
+getNewChar Encrypt size plainPos keyPos = alphabet size !! ((plainPos + keyPos) `mod` 26)
+getNewChar Decrypt size plainPos keyPos = alphabet size !! ((plainPos - keyPos) `mod` 26)
 
 
 
@@ -50,5 +52,21 @@ letterPos c
 encrypt :: String -> String -> String
 encrypt plain key = do
         let fixedKey = setKeyLength (length plain) (filter isLetter key)
-        zipWith transform fixedKey plain
+        zipWith (transform Encrypt) fixedKey plain
+
+-- | Tests
+--
+-- Examples:
+--
+-- >>> decrypt "nsydh" "computer"
+-- "lemon"
+-- >>> decrypt "NsYdH" "computer"
+-- "LeMoN"
+-- >>> decrypt "omstv2" "hi"
+-- "hello2"
+
+decrypt :: String -> String -> String 
+decrypt text key = do
+    let fixedKey = setKeyLength (length text) (filter isLetter key)
+    zipWith (transform Decrypt) fixedKey text
 
