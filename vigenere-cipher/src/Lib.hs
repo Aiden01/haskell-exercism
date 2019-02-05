@@ -18,25 +18,25 @@ transform keyC plainC
         | otherwise = do
             let charSize = if isUpper plainC then Upper else Lower
             getNewChar charSize (letterPos plainC) (letterPos keyC)
+            
 
--- Sets the length of the key to match the length of the plain text
 setKeyLength :: Int -> String -> String
 setKeyLength n xs
     | length xs > n =  take n xs
     | otherwise = take n (concat $ replicate (n - length xs) xs)
 
--- Returns the new char
+
 getNewChar :: Size -> Int -> Int -> Char
 getNewChar Upper plainPos keyPos = alphabet Upper !! ((plainPos + keyPos) `mod` 26)
 getNewChar Lower plainPos keyPos = alphabet Lower !! ((plainPos + keyPos) `mod` 26)
 
 
--- Returns the letter's position in the alphabet
+
 letterPos :: Char -> Int
 letterPos c = fromJust $ toUpper c `elemIndex` alphabet Upper
 
 
--- | Encrypts a plain text using a key
+-- | Tests
 --
 -- Examples:
 --
