@@ -18,17 +18,14 @@ transform keyC plainC
         | otherwise = do
             let charSize = if isUpper plainC then Upper else Lower
             getNewChar charSize (letterPos plainC) (letterPos keyC)
-            
+
 
 setKeyLength :: Int -> String -> String
-setKeyLength n xs
-    | length xs > n =  take n xs
-    | otherwise = take n (concat $ replicate (n - length xs) xs)
+setKeyLength n xs = take n (cycle xs)
 
 
 getNewChar :: Size -> Int -> Int -> Char
-getNewChar Upper plainPos keyPos = alphabet Upper !! ((plainPos + keyPos) `mod` 26)
-getNewChar Lower plainPos keyPos = alphabet Lower !! ((plainPos + keyPos) `mod` 26)
+getNewChar size plainPos keyPos = alphabet size !! ((plainPos + keyPos) `mod` 26)
 
 
 
